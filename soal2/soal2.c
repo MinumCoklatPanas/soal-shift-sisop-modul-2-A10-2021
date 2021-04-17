@@ -6,7 +6,6 @@
 #include <dirent.h>
 #include <wait.h>
 
-
 void run(char command[], char *arg[]){
 	pid_t child_id;
   int status;
@@ -28,14 +27,11 @@ void buat(){
   run("/bin/unzip", argv1);
 }
 
-
-char detail[100]="";
-void listFilesRecursively(char *basePath)
+void soal2b(char *basePath)
 {
     char path[1000];
     struct dirent *dp;
     DIR *dir = opendir(basePath);
-    FILE *file;
 
     if (!dir)
         return;
@@ -57,73 +53,19 @@ void listFilesRecursively(char *basePath)
             char *argv[] = {"mkdir","-p", sourcefile, NULL};
           	run("/bin/mkdir", argv);
 
-          
             if (!(strstr(dp->d_name, "_"))){
               char *argv[] = {"mv","-f", dirmv, sourcefile ,NULL};
           	  run("/bin/mv", argv);
-              
-              
-              //strcpy(detail,newname);
-        	  	//strcat(detail,"/keterangan.txt");
-        	  	//file = fopen(detail,"a");
-              char changename[100] = "";
-              char usedname[100] = "";
-        	  	strcpy(changename,newname);
-        	  	strcat(changename,"/");
-
-              int cnt = 0;
-              char sign1[1] = ";";
-              char sign2[2] = ".j";
-        	  	for(int x=0; x<35; x++){
-        	  		if(cnt == 0){
-        	  			if(namafile[x] == sign1[0]){
-        	  				cnt++;
-                    //fprintf(file,"nama : ");
-                    //fprintf(file,"\n");
-        	  			}
-        	  			continue;
-        	  		}
-        	  		if(cnt == 1){
-        	  			if(namafile[x]== sign1[0]){
-        	  				cnt++;
-                    //fprintf(file,"umur : ");
-                    //fprintf(file,"\n");
-        	  			}
-                  //fprintf(file,"%c", namafile[x]);
-        	  			strncat(usedname,&namafile[x],1);
-        	  			//continue;
-                  break;
-        	  		}
-                //if(namafile[x]==sign2[0] && namafile[x+1]==sign2[1]){
-        	  			//fprintf(file, " tahun ");
-                  //fprintf(file,"\n\n");
-        	  			//break;	
-        	  		//}
-        	  	//	fprintf(file, "%c", namafile[x]);
-              }
-              strcat(changename,usedname);
-        	  	strcat(changename,".jpg");
-        	  	strcat(newname,"/");
-        	  	strcat(newname, dp->d_name);
-        	  	char *argv10[] = {"mv",newname,changename,NULL};
-        	  	run("/bin/mv", argv10); 
-            
             }
-      strcpy(path, basePath);
-      strcat(path, "/");
-      strcat(path, dp->d_name);
-
-      listFilesRecursively(path);
+        }
     }
-  }
-  closedir(dir);
+    closedir(dir);
 }
 
 int main() {
   char loc[] = "/home/arsyad/modul2/petshop";
-
   buat();
-  listFilesRecursively(loc);
+  soal2b(loc);
 }
 
 
