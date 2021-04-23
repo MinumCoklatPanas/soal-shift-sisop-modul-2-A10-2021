@@ -6,6 +6,7 @@
 #include <dirent.h>
 #include <wait.h>
 
+
 void run(char command[], char *arg[]){
 	pid_t child_id;
   int status;
@@ -27,9 +28,10 @@ void buat(){
   run("/bin/unzip", argv1);
 }
 
-void soal2b(char *basePath)
+void soal2bcde()
 {
-    char path[1000];
+    char basePath[] = "/home/arsyad/modul2/petshop/";
+    
     struct dirent *dp;
     DIR *dir = opendir(basePath);
 
@@ -40,23 +42,54 @@ void soal2b(char *basePath)
     {
         if (strcmp(dp->d_name, ".") != 0 && strcmp(dp->d_name, "..") != 0)
         {
+            char loc[] = "/home/arsyad/modul2/petshop/";
             char newname[100] = "";
             strcpy(newname, dp->d_name);
-          	strtok(newname, ";");
-            char sourcefile[100] = "/home/arsyad/modul2/petshop/";
-            strcat(sourcefile, newname);
-            char dirmv[100] = "/home/arsyad/modul2/petshop/";
-            strcat(dirmv, dp->d_name);
-            char namafile[100] = "";
-            strcpy(namafile, dp->d_name);
-            
-            char *argv[] = {"mkdir","-p", sourcefile, NULL};
-          	run("/bin/mkdir", argv);
+            char pettype[50], petname[50], petage[50];
+            char *sign1 = strtok(newname,"_;");
+            int word = 0;
+            while(sign1 != NULL) {
+                  if(word==0){ 
+                    strcpy(pettype, sign1);
+                    char temp[100]="";
+                    strcpy(temp, loc);
+                    strcat(temp, pettype);
+                    char *argv[] = {"mkdir", "-p", temp, NULL};
+                    run("/bin/mkdir", argv);
+                  }
+                  if(word==1){ 
+                    strcpy(petname, sign1); 
+                    
+                    char dirmv[100] = "";
+                    strcpy(dirmv,loc);
+                    strcat(dirmv,dp->d_name);
 
-            if (!(strstr(dp->d_name, "_"))){
-              char *argv[] = {"mv","-f", dirmv, sourcefile ,NULL};
-          	  run("/bin/mv", argv);
-            }
+                    char source[100] = "";
+                    strcpy(source,loc);
+                    strcat(source,pettype);
+                    strcat(source,"/");
+                    strcat(source,petname);
+                    strcat(source,".jpg");
+
+                    char *argv1[] = {"mv", dirmv, source, NULL};
+                    run("/bin/mv", argv1);
+                  }
+                  if(word==2){ 
+                    strcpy(petage, sign1); 
+                    char sourcefile[100] = "";
+                    strcat(sourcefile, loc);
+                    strcat(sourcefile, pettype);
+                    strcat(sourcefile, "/keterangan.txt");
+
+                    FILE *fp;
+                    fp = fopen (sourcefile, "a");
+                    fprintf(fp, "nama: %s\numur: %s tahun\n\n", petname, petage);
+                    fclose(fp);
+                  }
+              sign1 = strtok(NULL, "_;");
+              word++;
+              }
+            
         }
     }
     closedir(dir);
@@ -65,11 +98,6 @@ void soal2b(char *basePath)
 int main() {
   char loc[] = "/home/arsyad/modul2/petshop";
   buat();
-  soal2b(loc);
+  soal2bcde();
+  return 0;
 }
-
-
-
-
-
-
