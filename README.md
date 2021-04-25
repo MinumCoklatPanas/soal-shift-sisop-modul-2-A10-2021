@@ -1,5 +1,124 @@
 # soal-shift-sisop-modul-2-A10-2021
 
+## Soal 1
+
+Pada suatu masa, hiduplah seorang Steven yang hidupnya pas-pasan. Steven punya pacar, namun sudah putus sebelum pacaran. Ketika dia galau memikirkan mantan, ia selalu menonton https://www.youtube.com/watch?v=568DH_9CMKI untuk menghilangkan kesedihannya. 
+
+Di lain hal Steven anak yang tidak amat sangat super membenci matkul sisop, beberapa jam setelah diputus oleh pacarnya dia menemukan wanita lain bernama Stevany, namun Stevany berkebalikan dengan Steven karena menyukai sisop. Steven ingin terlihat jago matkul sisop demi menarik perhatian Stevany.
+
+Pada hari ulang tahun Stevany, Steven ingin memberikan Stevany zip berisikan hal-hal yang disukai Stevany. Steven ingin isi zipnya menjadi rapi dengan membuat folder masing-masing sesuai extensi.
+
+#### Solusi
+
+Fungsi initDaemon() sebagai inisiasi supaya program dieksekusi di background, dan menjalankannya di main()
+
+```c
+void initDaemon()
+{
+…
+}
+…
+int main()
+{
+    // initDaemon();
+    
+    while (1)
+    {
+```
+
+##### A. Dikarenakan Stevany sangat menyukai huruf Y, Steven ingin nama folder-foldernya adalah Musyik untuk mp3, Fylm untuk mp4, dan Pyoto untuk jpg
+
+- Membuat folder baru dalam direktori "/home/[user]/modul2/" yang diberi nama Musyik, Fylm, Pyoto menggunakan perintah ```mkdir```.
+
+```c
+void makeFolder(char name[])
+{
+    char* argv[] = {"mkdir",name,NULL};
+    char path[] = "/bin/mkdir";
+    execute(argv,path);
+}
+```
+
+##### B. Untuk musik Steven mendownloadnya dari link di bawah, film dari link di bawah lagi, dan foto dari link dibawah juga
+- Menggunakan exec dengan command wget untuk mendownload.
+
+```c
+void download(char url[])
+{
+    char* argv[] = {"wget","--no-check-certificate",url,"-O","tmp.zip",NULL};
+    char path[] = "/usr/bin/wget";
+    execute(argv,path);
+    // unzip();
+    // execl("/usr/bin/wget","wget",url,NULL);
+}
+```
+
+##### C. Steven tidak ingin isi folder yang dibuatnya berisikan zip, sehingga perlu meng-extract-nya setelah didownload
+- Menggunakan exec juga (execute) dengan command unzip untuk mengektrak file
+
+```c
+void unzip()
+{
+    char* argv[] = {"unzip","/home/velli/soal2/tmp.zip",NULL};
+    char path[] = "/usr/bin/unzip";
+    execute(argv,path);
+}
+```
+
+##### D. Memindahkannya ke dalam folder yang telah dibuat (hanya file yang dimasukkan)
+- Menggunakan exec (execute) dengan command mv (move) untuk memindah
+
+```c
+void moveFile(char sourcePath[],char destPath[])
+{
+    char* argv[] = {"mv",sourcePath,destPath,NULL};
+    char path[] = "/bin/mv";
+    execute(argv,path);
+}
+```
+
+Output:
+Proses a-d terjadi pada pukul 16:22
+![1-folder y](https://user-images.githubusercontent.com/55073331/115996417-65eed700-a609-11eb-9bae-4df3a63e036f.jpg)
+
+##### E. Untuk memudahkan Steven, ia ingin semua hal di atas berjalan otomatis 6 jam sebelum waktu ulang tahun Stevany).
+- Terjadi pada pukul 16 tanggal 9 April 2021, maka mengimport waktu local (disini kita mengubah waktu dahulu) ekmdian meng-compare string jika waktu sesuai maka proses berjalan.
+
+```c
+int main()
+{
+    // initDaemon();
+    
+    while (1)
+    {
+        time_t timer;
+        char buffer[35];
+        struct tm* tm_info;
+
+        timer = time(NULL);
+        tm_info = localtime(&timer);
+        strftime(buffer,35,"%m-%d_%H:%M",tm_info);
+        printf("%s\n",buffer);
+        if (strcmp(buffer,"04-09_16:22") == 0)
+        {
+```
+Mengganti Tanggal dahulu
+
+![1-ganti tanggal](https://user-images.githubusercontent.com/55073331/115996430-70a96c00-a609-11eb-82d4-2ebecd99cd8c.jpg)
+##### F. Setelah itu pada waktu ulang tahunnya Stevany, semua folder akan di zip dengan nama Lopyu_Stevany.zip dan semua folder akan di delete(sehingga hanya menyisakan .zip).
+
+```c
+if (strcmp(buffer,"04-09_22:22") == 0)
+        {
+            char* arg[] = {"zip","-r","Lopyu_Stevany.zip","Musyik","Fyoto","Fylm",NULL};
+            char path[] = "/usr/bin/zip";
+            execute(arg,path);
+        }
+```
+
+![1-selesai](https://user-images.githubusercontent.com/55073331/115996971-959ede80-a60b-11eb-8c48-8efc97fa439d.jpg)
+
+
 ## Soal 2
 
 Loba bekerja di sebuah petshop terkenal, suatu hari dia mendapatkan zip yang berisi banyak foto peliharaan dan ia diperintahkan untuk mengkategorikan foto-foto peliharaan tersebut. Loba merasa kesusahan melakukan pekerjaanna secara manual, apalagi ada kemungkinan ia akan diperintahkan untuk melakukan hal yang sama. Kamu adalah teman baik Loba dan ia meminta bantuanmu untuk membantu pekerjaannya.
