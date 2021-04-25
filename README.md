@@ -160,3 +160,208 @@ Output:
 
 #### Kendala
 - Susah untuk memproses string yang ada pada file keterangan.txt
+
+
+## Soal 3
+
+Ranora adalah mahasiswa Teknik Informatika yang saat ini sedang menjalani magang di perusahan ternama yang bernama “FakeKos Corp.”, perusahaan yang bergerak dibidang keamanan data. Karena Ranora masih magang, maka beban tugasnya tidak sebesar beban tugas pekerja tetap perusahaan. Di hari pertama Ranora bekerja, pembimbing magang Ranora memberi tugas pertamanya untuk membuat sebuah program.hkan
+
+#### Solusi
+
+
+##### A. Ranora harus membuat sebuah program C yang dimana setiap 40 detik membuat sebuah direktori dengan nama sesuai timestamp [YYYY-mm-dd_HH:ii:ss].
+- Menggunakan operasi-operasi dasar dari string untuk memproses direktori file.
+- Menambah library ```#include <time.h>``` agar bisa mengakses waktu hari ini.
+- Set waktu 40 detik untuk membuat sebuah direktori
+
+```c
+void makeFolder()
+{
+    time_t timer;
+    char buffer[35];
+    struct tm* tm_info;
+
+    timer = time(NULL);
+    tm_info = localtime(&timer);
+    strftime(buffer,35,"%Y-%m-%d_%H:%M:S",tm_info);
+
+    printf("%s",buffer);
+
+    pid_t pid;
+    int status;
+    pid = fork();
+
+    if (pid == 0)
+    {
+        char *mkdir[] = {"mkdir",buffer,NULL};
+        execv("/bin/mkdir",mkdir);
+    }
+    while (wait(&status) > 0);
+    chdir(buffer);
+    strcpy(dirName,buffer);
+}
+```
+
+Output:
+
+
+
+##### B. Setiap direktori yang sudah dibuat diisi dengan 10 gambar yang didownload dari https://picsum.photos/, dimana setiap gambar akan didownload setiap 5 detik. Setiap gambar yang didownload akan diberi nama dengan format timestamp [YYYY-mm-dd_HH:ii:ss] dan gambar tersebut berbentuk persegi dengan ukuran (n%1000) + 50 pixel dimana n adalah detik Epoch Unix.
+- Mengunduh gambar menggunakan perintah ```wget```
+- Mengatur ukuran gambar dengan memproses url gambar
+
+```c
+for (i = 1 ; i <= 10 ; i++){
+    time_t timer;
+    char buffer[35];
+    struct tm* tm_info;
+
+    timer = time(NULL);
+    tm_info = localtime(&timer);
+    strftime(buffer,35,"%Y-%m-%d_%H:%M:%S",tm_info);
+    // printf("%s",buffer);
+    // puts("yo");
+    // return;
+    int sz = (timer % 1000) + 50;
+    char url[] = "https://picsum.photos/";
+    char tmp[55];
+    sprintf(tmp,"%d",sz);
+    strcat(url,tmp);
+    printf("%s\n",url);
+    pid_t pid;
+    int status;
+    pid = fork();
+    if (pid == 0)
+    {
+        char *arg[] = {"wget",url,"-O",buffer,NULL};
+        execv("/usr/bin/wget",arg);
+    }
+    while (wait(&status) > 0);
+    sleep(5);
+}
+```
+
+Output:
+
+
+
+##### C. Setelah direktori telah terisi dengan 10 gambar, program tersebut akan membuat sebuah file “status.txt”, dimana didalamnya berisi pesan “Download Success” yang terenkripsi dengan teknik Caesar Cipher dan dengan shift 5. Caesar Cipher adalah Teknik enkripsi sederhana yang dimana dapat melakukan enkripsi string sesuai dengan shift/key yang kita tentukan. Misal huruf “A” akan dienkripsi dengan shift 4 maka akan menjadi “E”. Karena Ranora orangnya perfeksionis dan rapi, dia ingin setelah file tersebut dibuat, direktori akan di zip dan direktori akan didelete, sehingga menyisakan hanya file zip saja.
+- Membuat file "status.txt" menggunakan perintah ```touch```
+- Write file status.txt dengan status yang telah dienkripsi dengan caesar cipher
+
+```c
+void writeStatus()
+{
+    // FILE* f;
+    char status[] = "Download Success";
+    for (int i = 0 ; i < 16 ; i++)
+    {
+        if (status[i] == ' ') continue;
+        char pivot = ('A' <= status[i] && status[i] <= 'Z' ? 'A' : 'a');
+        int ix = status[i] - pivot;
+        normalize(&ix);
+        status[i] = pivot + ix;
+    }
+    int sts;
+    pid_t pid;
+    pid = fork();
+    if (pid == 0)
+    {
+        char* arg[] = {"touch","status.txt",NULL};
+        execv("/bin/touch",arg);
+    }
+    else
+    {
+        while ((wait(&sts)) > 0);
+        char* arg2[] = {"printf",status,">>","status.txt",NULL};
+        execvp(arg2[0],arg2);
+    }
+    // fopen("status.txt","w");
+    // fprintf(f,"%s",status);
+    // fclose(f);
+}
+```
+
+Output:
+
+
+
+##### D. Untuk mempermudah pengendalian program, pembimbing magang Ranora ingin program tersebut akan men-generate sebuah program “Killer” yang executable, dimana program tersebut akan menterminasi semua proses program yang sedang berjalan dan akan menghapus dirinya sendiri setelah program dijalankan. Karena Ranora menyukai sesuatu hal yang baru, maka Ranora memiliki ide untuk program “Killer” yang dibuat nantinya harus merupakan program bash.
+- Mengakses file killer.sh yang telah dibuat
+- Membuat program killer meng-kill proses dengan perintah ```getpid()```
+
+```c
+FILE * f;
+f = fopen("killer.sh","w");
+// perror("fopen");
+// fflush(f);
+fprintf(f,"kill %d\nrm \"$0\"",getpid());
+// fprintf(f,"\n");
+// fflush(f);
+fclose(f);
+fflush(0);
+
+pid_t child_id;
+child_id = fork();
+if (child_id == 0)
+{
+  char *ag[] = {"chmod", "u+x", "killer.sh", NULL};
+  execv("/bin/chmod", ag);
+}
+while ((wait(&status)) > 0);
+```
+
+Output:
+
+
+
+##### E. Pembimbing magang Ranora juga ingin nantinya program utama yang dibuat Ranora dapat dijalankan di dalam dua mode. Untuk mengaktifkan mode pertama, program harus dijalankan dsdengan argumen -z, dan Ketika dijalankan dalam mode pertama, program utama akan langsung menghentikan semua operasinya Ketika program Killer dijalankan. Sedangkan untuk mengaktifkan mode kedua, program harus dijalankan dengan argumen -x, dan Ketika dijalankan dalam mode kedua, program utama akan berhenti namun membiarkan proses di setiap direktori yang masih berjalan hingga selesai (Direktori yang sudah dibuat akan mendownload gambar sampai selesai dan membuat file txt, lalu zip dan delete direktori).
+- Membuat program daemon sehingga Program utama dapat dijalankan dalam dua mode.
+
+```c
+void initDaemon()
+{
+  pid_t pid, sid;        // Variabel untuk menyimpan PID
+
+  pid = fork();     // Menyimpan PID dari Child Process
+
+  /* Keluar saat fork gagal
+  * (nilai variabel pid < 0) */
+  if (pid < 0) {
+    exit(EXIT_FAILURE);
+  }
+
+  /* Keluar saat fork berhasil
+  * (nilai variabel pid adalah PID dari child process) */
+  if (pid > 0) {
+    exit(EXIT_SUCCESS);
+  }
+
+  umask(0);
+
+  sid = setsid();
+  if (sid < 0) {
+    exit(EXIT_FAILURE);
+  }
+
+  if ((chdir("/home/arsyad/modul2/")) < 0) {
+    exit(EXIT_FAILURE);
+  }
+
+  close(STDIN_FILENO);
+  close(STDOUT_FILENO);
+  close(STDERR_FILENO);
+
+  // while (1) {
+  //   // Tulis program kalian di sini
+  //   int a = system("mkdir `date`");
+  //   sleep(10);
+  // }
+}
+```
+
+Output:
+
+
+
+#### Kendala
