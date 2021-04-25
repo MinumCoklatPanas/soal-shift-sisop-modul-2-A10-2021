@@ -23,7 +23,7 @@ void run(char command[], char *arg[]){
 }
 ```
 
-##### A. Mengextract zip ke dalam folder "/home/[user]/modul2/petshop". Program harus bisa membedakan file dan folder sehingga dapat memproses file yang dibutuhkan dan menghapus #####	 folder yang tidak dibutuhkan.
+##### A. Mengextract zip ke dalam folder "/home/[user]/modul2/petshop". Program harus bisa membedakan file dan folder sehingga dapat memproses file yang dibutuhkan dan menghapus folder yang tidak dibutuhkan.
 - Membuat folder baru dalam direktori "/home/[user]/modul2/" yang diberi nama "petshop" menggunakan perintah ```mkdir```.
 - Filtering file dan folder menggunakan perintah ```unzip```. Apabila file berekstensi .jpg di extract dan selain itu tidak.
 
