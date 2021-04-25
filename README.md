@@ -2,7 +2,7 @@
 
 ## Soal 2
 
-Lobe bekerja di sebuah petshop terkenal, suatu hari dia mendapatkan zip yang berisi banyak foto peliharaan dan ia diperintahkan untuk mengkategorikan foto-foto peliharaan tersebut. Loba merasa kesusahan melakukan pekerjaanna secara manual, apalagi ada kemungkinan ia akan diperintahkan untuk melakukan hal yang sama. Kamu adalah teman baik Loba dan ia meminta bantuanmu untuk membantu pekerjaannya.
+Loba bekerja di sebuah petshop terkenal, suatu hari dia mendapatkan zip yang berisi banyak foto peliharaan dan ia diperintahkan untuk mengkategorikan foto-foto peliharaan tersebut. Loba merasa kesusahan melakukan pekerjaanna secara manual, apalagi ada kemungkinan ia akan diperintahkan untuk melakukan hal yang sama. Kamu adalah teman baik Loba dan ia meminta bantuanmu untuk membantu pekerjaannya.
 
 #### Solusi
 
